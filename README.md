@@ -63,21 +63,21 @@ path_groups:
     "skip_existing": true,
     "max_workers": 16,
     
-    "source_directory": "C:\\\\115",
-    "o_files_directory": "C:\\\\115\\\\OBS",
-    "p_files_directory": "C:\\\\115\\\\NAV",
+    "source_directory": "C:\\115",
+    "o_files_directory": "C:\\115\\OBS",
+    "p_files_directory": "C:\\115\\NAV",
     
     "path_groups": [
         {
-            "source_directory": "C:\\\\115",
-            "o_files_directory": "C:\\\\115\\\\OBS",
-            "p_files_directory": "C:\\\\115\\\\NAV"
+            "source_directory": "C:\\115",
+            "o_files_directory": "C:\\115\\OBS",
+            "p_files_directory": "C:\\115\\NAV"
         }
     ]
 }
 ```
 
-**注意：** JSON 格式中的反斜線需要雙重轉義（`\\\\` 表示一個反斜線）
+**注意：** JSON 格式中的反斜線需要雙重轉義（`\\` 表示一個反斜線）
 
 ### 參數說明
 
