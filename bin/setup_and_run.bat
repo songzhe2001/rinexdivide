@@ -54,14 +54,26 @@ echo [3/3] 啟動文件分類工具...
 echo ========================================
 echo.
 
+:: 切換到根目錄
+cd /d "%~dp0\.."
+
 :: 檢查配置文件
-if exist "config.yaml" (
+if exist "config\config.yaml" (
+    echo 使用 config\config.yaml 配置文件
+) else if exist "config\config.json" (
+    echo 使用 config\config.json 配置文件
+) else if exist "config\config.ini" (
+    echo 使用 config\config.ini 配置文件
+) else if exist "config.yaml" (
     echo 使用 config.yaml 配置文件
 ) else if exist "config.json" (
     echo 使用 config.json 配置文件
 ) else (
     echo ✗ 未找到配置文件！
-    echo 請創建 config.yaml 或 config.json 配置文件
+    echo 請在 config\ 目錄下創建配置文件：
+    echo   - config\config.yaml (推薦)
+    echo   - config\config.json
+    echo   - config\config.ini
     pause
     exit /b 1
 )

@@ -1,0 +1,17 @@
+2025-08-12 15:38:23 - INFO - setup_logging:149 - 日誌系統已初始化，日誌文件：logs\file_organizer_20250812_153823.log
+2025-08-12 15:38:23 - INFO - main:754 - 程序啟動
+2025-08-12 15:38:23 - INFO - run_file_organization:565 - === 開始執行文件整理任務 ===
+2025-08-12 15:38:23 - INFO - organize_files:408 - 开始处理文件夹: temp
+2025-08-12 15:38:23 - INFO - organize_files:417 - o 文件目标目录: temp\OBS
+2025-08-12 15:38:23 - INFO - organize_files:418 - p 文件目标目录: temp\NAV
+2025-08-12 15:38:23 - INFO - organize_files:419 - o 文件匹配模式: regex:\d{2}o$
+2025-08-12 15:38:23 - INFO - organize_files:420 - p 文件匹配模式: regex:\d{2}p$
+2025-08-12 15:38:23 - INFO - organize_files:421 - 使用线程数: 4
+2025-08-12 15:38:23 - INFO - organize_files:465 - 找到 4 个文件需要处理...
+2025-08-12 15:38:23 - INFO - organize_files:498 - 文件處理成功: nav02.21p -> 已复制: nav02.21p -> NAV/
+2025-08-12 15:38:23 - INFO - organize_files:498 - 文件處理成功: nav01.21p -> 已复制: nav01.21p -> NAV/
+2025-08-12 15:38:23 - INFO - organize_files:498 - 文件處理成功: test01.21o -> 已复制: test01.21o -> OBS/
+2025-08-12 15:38:23 - INFO - organize_files:498 - 文件處理成功: test02.21o -> 已复制: test02.21o -> OBS/
+2025-08-12 15:38:23 - INFO - organize_files:507 - 处理完成！
+2025-08-12 15:38:23 - INFO - organize_files:522 - 處理統計 - o文件: 2個, p文件: 2個, 跳過: 0個, 忽略: 1個, 錯誤: 0個
+2025-08-12 15:38:23 - INFO - run_file_organization:575 - === 文件整理任務完成，耗時: 0:00:00.007897 ===

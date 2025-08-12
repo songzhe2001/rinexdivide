@@ -82,15 +82,29 @@ Write-Host "[4/4] 啟動文件分類工具..." -ForegroundColor Yellow
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
+# 切換到根目錄
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+$rootPath = Split-Path -Parent $scriptPath
+Set-Location $rootPath
+
 # 檢查配置文件
-if (Test-Path "config.yaml") {
+if (Test-Path "config\config.yaml") {
+    Write-Host "找到 config\config.yaml 配置文件" -ForegroundColor Green
+} elseif (Test-Path "config\config.json") {
+    Write-Host "找到 config\config.json 配置文件" -ForegroundColor Green
+} elseif (Test-Path "config\config.ini") {
+    Write-Host "找到 config\config.ini 配置文件" -ForegroundColor Green
+} elseif (Test-Path "config.yaml") {
     Write-Host "找到 config.yaml 配置文件" -ForegroundColor Green
 } elseif (Test-Path "config.json") {
     Write-Host "找到 config.json 配置文件" -ForegroundColor Green
 } else {
     Write-Host "✗ 未找到配置文件！" -ForegroundColor Red
-    Write-Host "請創建 config.yaml 或 config.json 配置文件" -ForegroundColor Yellow
-    Write-Host "參考 config_example.json 或現有的 config.yaml 範例" -ForegroundColor Yellow
+    Write-Host "請在 config\ 目錄下創建配置文件：" -ForegroundColor Yellow
+    Write-Host "  - config\config.yaml (推薦)" -ForegroundColor Yellow
+    Write-Host "  - config\config.json" -ForegroundColor Yellow
+    Write-Host "  - config\config.ini" -ForegroundColor Yellow
+    Write-Host "參考 examples\ 目錄下的範例文件" -ForegroundColor Yellow
     Read-Host "按 Enter 鍵退出"
     exit 1
 }

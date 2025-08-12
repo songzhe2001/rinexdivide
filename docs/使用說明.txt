@@ -11,7 +11,16 @@
    ├─ setup_and_run.bat            - 安裝依賴並運行
    └─ run_file_organizer.bat       - 直接運行（需要先安裝依賴）
 
-3. 手動運行
+3. 定期運行模式（新功能）
+   ├─ run_scheduler.bat            - 啟動定期運行模式
+   └─ run_scheduler.ps1            - PowerShell 版本（需要管理員權限）
+
+4. Windows 服務模式（推薦用於伺服器）
+   ├─ install_service.bat          - 安裝為 Windows 服務
+   ├─ install_service.ps1          - PowerShell 版本服務安裝
+   └─ manage_service.bat           - 服務管理工具
+
+5. 手動運行
    └─ python file_organizer.py     - 命令行直接運行
 
 配置文件說明：
@@ -43,12 +52,61 @@ JSON 中需要轉義："C:\\Users\\15658\\Documents\\data"
 - o_files_directory: 觀測文件目標目錄  
 - p_files_directory: 導航文件目標目錄
 
+定期運行配置：
+========================================
+
+在配置文件中添加 schedule 區塊來啟用定期運行功能：
+
+基本設置：
+- enabled: true/false - 是否啟用定期運行
+- run_on_start: true/false - 啟動時是否立即執行一次
+
+調度類型：
+
+1. 間隔執行 (interval)
+   type: "interval"
+   interval: 30        # 間隔數值
+   unit: "minutes"     # 時間單位：seconds, minutes, hours, days
+
+2. 每日執行 (daily)
+   type: "daily"
+   time: "02:00"       # 執行時間 (24小時制)
+
+3. 每週執行 (weekly)
+   type: "weekly"
+   day: "monday"       # 星期幾
+   time: "02:00"       # 執行時間 (24小時制)
+
+範例配置：
+schedule:
+  enabled: true
+  run_on_start: false
+  type: "interval"
+  interval: 30
+  unit: "minutes"
+
 快速開始：
 ========================================
 
+手動運行模式：
 1. 雙擊運行 auto_install_and_run.bat
 2. 編輯 config.yaml 文件，設置您的路徑
 3. 確認配置後輸入 y 開始處理
+
+定期運行模式：
+1. 編輯 config.yaml 文件，設置路徑和調度配置
+2. 將 schedule.enabled 設為 true
+3. 雙擊運行 run_scheduler.bat
+4. 程序將按配置的時間間隔自動執行
+5. 按 Ctrl+C 可停止定期運行
+
+Windows 服務模式（推薦用於伺服器）：
+1. 編輯 config.yaml 文件，設置路徑和調度配置
+2. 將 schedule.enabled 設為 true
+3. 右鍵以管理員身分運行 install_service.bat
+4. 使用 manage_service.bat 管理服務（啟動/停止/重啟）
+5. 服務將在背景持續運行，開機自動啟動
+6. 日誌文件保存在 service.log
 
 注意事項：
 ========================================

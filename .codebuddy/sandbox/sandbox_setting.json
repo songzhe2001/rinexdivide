@@ -1,0 +1,20 @@
+{
+  "path": "c:\\Users\\15658\\Documents\\ku\\codebuddy\\tools\\rinexdivide",
+  "desc": "這是一個文件自動分類工具項目，包含 RINEX 文件自動分類功能，支持多線程處理、定期運行、服務模式等功能。項目已完成目錄整理，包含完整的使用說明和可視化項目結構預覽頁面。",
+  "id": "8eb3aca726fe4dfe911b37c458dd2770",
+  "data": {
+    "spaceKey": "8eb3aca726fe4dfe911b37c458dd2770",
+    "connections": {
+      "webIDE": "https://8eb3aca726fe4dfe911b37c458dd2770.ap-singapore.cloudstudio.club",
+      "preview": "https://8eb3aca726fe4dfe911b37c458dd2770--{port}.ap-singapore.cloudstudio.club",
+      "api": "https://8eb3aca726fe4dfe911b37c458dd2770--api.ap-singapore.cloudstudio.club",
+      "pty": "https://8eb3aca726fe4dfe911b37c458dd2770--pty.ap-singapore.cloudstudio.club"
+    }
+  },
+  "config": {
+    "api": "https://8eb3aca726fe4dfe911b37c458dd2770--api.ap-singapore.cloudstudio.club",
+    "pty": "https://8eb3aca726fe4dfe911b37c458dd2770--pty.ap-singapore.cloudstudio.club",
+    "region": "ap-shanghai",
+    "spaceKey": "8eb3aca726fe4dfe911b37c458dd2770"
+  }
+}

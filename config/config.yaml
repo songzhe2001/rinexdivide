@@ -1,0 +1,32 @@
+# 文件自動分類工具配置文件
+
+# 文件匹配模式
+file_extensions:
+  o_files:
+    - "regex:\\d{2}o$"
+  p_files:
+    - "regex:\\d{2}p$"
+
+# 操作設置
+copy_mode: true        # true=複製文件, false=移動文件
+skip_existing: true    # true=跳過已存在文件, false=重命名
+max_workers: 16        # 最大線程數
+
+# 日誌配置
+logging:
+  enabled: true                    # 啟用日誌記錄
+  log_directory: "logs"            # 日誌文件目錄
+  log_level: "INFO"                # 日誌級別：DEBUG, INFO, WARNING, ERROR
+  max_log_files: 30                # 保留的日誌文件數量
+  log_format: "detailed"           # 日誌格式：simple, detailed
+  console_output: true             # 是否同時輸出到控制台
+
+# 多組路徑配置
+path_groups:
+  - source_directory: "Z:/public/nim/data/Test/Rinex/ST01"
+    o_files_directory: "Z:/public/nim/data/Test/Rinex/ST01/OBS"
+    p_files_directory: "Z:/public/nim/data/Test/Rinex/ST01/NAV"
+  
+  - source_directory: "Z:/public/nim/data/Test/Rinex/ST02"
+    o_files_directory: "Z:/public/nim/data/Test/Rinex/ST02/OBS"
+    p_files_directory: "Z:/public/nim/data/Test/Rinex/ST02/NAV"

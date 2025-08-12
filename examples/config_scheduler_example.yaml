@@ -1,0 +1,56 @@
+# 文件自動分類工具配置文件 - 定期運行範例
+
+# 文件匹配模式
+file_extensions:
+  o_files:
+    - "regex:\\d{2}o$"
+  p_files:
+    - "regex:\\d{2}p$"
+
+# 操作設置
+copy_mode: true        # true=複製文件, false=移動文件
+skip_existing: true    # true=跳過已存在文件, false=重命名
+max_workers: 16        # 最大線程數
+
+# 日誌配置
+logging:
+  enabled: true                    # 啟用日誌記錄
+  log_directory: "logs"            # 日誌文件目錄
+  log_level: "INFO"                # 日誌級別：DEBUG, INFO, WARNING, ERROR
+  max_log_files: 30                # 保留的日誌文件數量
+  log_format: "detailed"           # 日誌格式：simple, detailed
+  console_output: true             # 是否同時輸出到控制台
+
+# 定期運行配置
+schedule:
+  enabled: true        # 啟用定期運行
+  run_on_start: true   # 啟動時立即執行一次
+  
+  # 範例1：每30分鐘執行一次
+  type: "interval"
+  interval: 30
+  unit: "minutes"
+  
+  # 範例2：每天凌晨2點執行（取消註釋使用）
+  # type: "daily"
+  # time: "02:00"
+  
+  # 範例3：每週一凌晨2點執行（取消註釋使用）
+  # type: "weekly"
+  # day: "monday"
+  # time: "02:00"
+
+# 默認路徑配置（當不使用 path_groups 時）
+source_directory: "Z:/public/nim/data/Test/Rinex/ST01"
+o_files_directory: "Z:/public/nim/data/Test/Rinex/ST01/OBS"
+p_files_directory: "Z:/public/nim/data/Test/Rinex/ST01/NAV"
+
+# 多組路徑配置
+path_groups:
+  - source_directory: "Z:/public/nim/data/Test/Rinex/ST01"
+    o_files_directory: "Z:/public/nim/data/Test/Rinex/ST01/OBS"
+    p_files_directory: "Z:/public/nim/data/Test/Rinex/ST01/NAV"
+  
+  - source_directory: "Z:/public/nim/data/Test/Rinex/ST02"
+    o_files_directory: "Z:/public/nim/data/Test/Rinex/ST02/OBS"
+    p_files_directory: "Z:/public/nim/data/Test/Rinex/ST02/NAV"
