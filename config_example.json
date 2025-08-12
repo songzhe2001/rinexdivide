@@ -1,0 +1,31 @@
+{
+    "file_extensions": {
+        "o_files": ["regex:\\d{2}o$"],
+        "p_files": ["regex:\\d{2}p$"]
+    },
+    "copy_mode": true,
+    "skip_existing": true,
+    "max_workers": 16,
+    
+    "source_directory": "X:/data/Test/Rinex/ST01",
+    "o_files_directory": "X:/data/Test/Rinex/ST01/OBS",
+    "p_files_directory": "X:/data/Test/Rinex/ST01/NAV",
+    
+    "path_groups": [
+        {
+            "source_directory": "X:/data/Test/Rinex/ST01",
+            "o_files_directory": "X:/data/Test/Rinex/ST01/OBS",
+            "p_files_directory": "X:/data/Test/Rinex/ST01/NAV"
+        },
+        {
+            "source_directory": "X:/data/Test/Rinex/ST02",
+            "o_files_directory": "X:/data/Test/Rinex/ST02/OBS",
+            "p_files_directory": "X:/data/Test/Rinex/ST02/NAV"
+        },
+        {
+            "source_directory": "X:/data/Test/Rinex/ST03",
+            "o_files_directory": "X:/data/Test/Rinex/ST03/OBS",
+            "p_files_directory": "X:/data/Test/Rinex/ST03/NAV"
+        }
+    ]
+}

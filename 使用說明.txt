@@ -1,0 +1,68 @@
+文件自動分類工具 - 使用說明
+========================================
+
+本工具提供多種運行方式，請根據您的情況選擇：
+
+1. 完全自動安裝（推薦新手）
+   ├─ auto_install_and_run.bat     - 自動安裝 Python 和依賴，然後運行
+   └─ install_and_run.ps1          - PowerShell 版本（需要管理員權限）
+
+2. 已安裝 Python 的用戶
+   ├─ setup_and_run.bat            - 安裝依賴並運行
+   └─ run_file_organizer.bat       - 直接運行（需要先安裝依賴）
+
+3. 手動運行
+   └─ python file_organizer.py     - 命令行直接運行
+
+配置文件說明：
+========================================
+
+支援的配置文件格式（按優先順序）：
+1. config.yaml  - YAML 格式（推薦，支援直接複製 Windows 路徑）
+2. config.json  - JSON 格式（需要轉義反斜線）
+
+Windows 路徑使用方法：
+- 從地址欄複製：C:\Users\15658\Documents\data
+
+YAML 中有三種寫法：
+1. 使用正斜線（推薦）："C:/Users/15658/Documents/data"
+2. 雙重轉義反斜線："C:\\Users\\15658\\Documents\\data"  
+3. 使用單引號（不轉義）：'C:\Users\15658\Documents\data'
+
+JSON 中需要轉義："C:\\Users\\15658\\Documents\\data"
+
+注意：YAML 雙引號中的反斜線會被解析為轉義字符，所以：
+- "C:\Users" 會出錯（\U 是未知轉義字符）
+- "C:/Users" 正確
+- "C:\\Users" 正確  
+- 'C:\Users' 正確（單引號不解析轉義）
+
+多組路徑配置：
+在 path_groups 中可以添加任意數量的路徑組，每組包含：
+- source_directory: 源目錄
+- o_files_directory: 觀測文件目標目錄  
+- p_files_directory: 導航文件目標目錄
+
+快速開始：
+========================================
+
+1. 雙擊運行 auto_install_and_run.bat
+2. 編輯 config.yaml 文件，設置您的路徑
+3. 確認配置後輸入 y 開始處理
+
+注意事項：
+========================================
+
+- 首次運行可能需要管理員權限來安裝 Python
+- 如果自動安裝失敗，請手動安裝 Python: https://www.python.org/downloads/
+- 安裝 Python 時請勾選 "Add Python to PATH"
+- 網路不穩定時會自動嘗試使用國內鏡像源
+
+技術支援：
+========================================
+
+如遇問題，請檢查：
+1. Python 是否正確安裝並添加到 PATH
+2. 配置文件格式是否正確
+3. 路徑是否存在且有讀寫權限
+4. 防毒軟體是否阻擋了程式運行

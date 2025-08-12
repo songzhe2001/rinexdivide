@@ -7,25 +7,64 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from queue import Queue
 
-def load_config(config_file="config.json"):
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
+
+def normalize_path(p):
     """
-    加载配置文件
+    正規化路徑，支持 Windows 與 Unix 風格，並展開環境變數與 ~
+    """
+    if p is None:
+        return None
+    if not isinstance(p, str):
+        return str(p)
+    p = os.path.expandvars(p)
+    p = os.path.expanduser(p)
+    return str(Path(p))
+
+def load_config(config_file=None):
+    """
+    加载配置文件，支持 YAML 和 JSON 格式
     
     Args:
-        config_file: 配置文件路径
+        config_file: 配置文件路径，如果為 None 則自動尋找
     
     Returns:
         dict: 配置信息
     """
+    # 如果沒有指定配置文件，按優先順序尋找
+    if config_file is None:
+        possible_configs = ["config.yaml", "config.yml", "config.json"]
+        for possible_config in possible_configs:
+            if os.path.exists(possible_config):
+                config_file = possible_config
+                break
+        else:
+            print("錯誤：找不到配置文件！請創建 config.yaml 或 config.json")
+            return None
+    
     try:
         with open(config_file, 'r', encoding='utf-8') as f:
-            config = json.load(f)
+            if config_file.endswith(('.yaml', '.yml')):
+                if not YAML_AVAILABLE:
+                    print("錯誤：需要安裝 PyYAML 來讀取 YAML 配置文件")
+                    print("請運行：pip install PyYAML")
+                    return None
+                config = yaml.safe_load(f)
+            else:
+                config = json.load(f)
+        
+        print(f"已加載配置文件：{config_file}")
         return config
+        
     except FileNotFoundError:
-        print(f"错误：配置文件 {config_file} 不存在！")
+        print(f"錯誤：配置文件 {config_file} 不存在！")
         return None
-    except json.JSONDecodeError:
-        print(f"错误：配置文件 {config_file} 格式错误！")
+    except (json.JSONDecodeError, yaml.YAMLError) as e:
+        print(f"錯誤：配置文件 {config_file} 格式錯誤：{e}")
         return None
 
 def is_o_file(filename, patterns):
@@ -135,16 +174,24 @@ def process_single_file(file_info):
     
     return result
 
-def organize_files(config):
+def organize_files(config, path_group=None):
     """
     根据配置文件自动分类文件（多线程版本）
     
     Args:
         config: 配置信息字典
+        path_group: 路径组配置，如果为None则使用默认路径
     """
-    source_dir = config["source_directory"]
-    o_target_dir = config["o_files_directory"]
-    p_target_dir = config["p_files_directory"]
+    # 如果提供了特定的路径组，则使用该组的配置，否则使用默认配置
+    if path_group:
+        source_dir = normalize_path(path_group["source_directory"])
+        o_target_dir = normalize_path(path_group["o_files_directory"])
+        p_target_dir = normalize_path(path_group["p_files_directory"])
+    else:
+        source_dir = normalize_path(config["source_directory"])
+        o_target_dir = normalize_path(config["o_files_directory"])
+        p_target_dir = normalize_path(config["p_files_directory"])
+    
     o_patterns = config["file_extensions"]["o_files"]
     p_patterns = config["file_extensions"]["p_files"]
     max_workers = config.get("max_workers", 4)  # 默认4个线程
@@ -156,7 +203,7 @@ def organize_files(config):
     # 验证源目录是否存在
     if not source_path.exists():
         print(f"错误：源文件夹 {source_dir} 不存在！")
-        return
+        return False
     
     # 创建目标目录
     o_path.mkdir(parents=True, exist_ok=True)
@@ -191,16 +238,22 @@ def organize_files(config):
             
             target_file = target_dir / file_path.name
             
+            # 创建一个配置副本，确保每个文件使用正确的目标路径
+            file_config = config.copy()
+            if path_group:
+                file_config["o_files_directory"] = o_target_dir
+                file_config["p_files_directory"] = p_target_dir
+            
             files_to_process.append({
                 "file_path": file_path,
                 "target_file": target_file,
                 "file_type": file_type,
-                "config": config
+                "config": file_config
             })
     
     if not files_to_process:
         print("没有找到需要处理的文件。")
-        return
+        return True
     
     print(f"找到 {len(files_to_process)} 个文件需要处理...")
     
@@ -239,6 +292,36 @@ def organize_files(config):
     print(f"跳过文件: {copied_count['skipped']} 个")
     print(f"忽略文件: {copied_count['ignored']} 个")
     print(f"错误文件: {copied_count['errors']} 个")
+    
+    return True
+
+def process_path_groups(config):
+    """
+    处理多组路径配置
+    
+    Args:
+        config: 配置信息字典
+    
+    Returns:
+        bool: 是否全部处理成功
+    """
+    # 检查是否有多组路径配置
+    path_groups = config.get("path_groups", [])
+    
+    if not path_groups:
+        # 如果没有多组路径配置，使用默认配置处理单个路径
+        return organize_files(config)
+    
+    # 处理每组路径
+    all_success = True
+    for i, path_group in enumerate(path_groups):
+        print(f"\n处理路径组 {i+1}/{len(path_groups)}")
+        print("=" * 60)
+        success = organize_files(config, path_group)
+        if not success:
+            all_success = False
+    
+    return all_success
 
 def main():
     """
@@ -252,11 +335,23 @@ def main():
     if config is None:
         return
     
+    # 检查是否有多组路径配置
+    path_groups = config.get("path_groups", [])
+    
     # 显示配置信息
     print("当前配置:")
-    print(f"  源目录: {config['source_directory']}")
-    print(f"  o文件目录: {config['o_files_directory']}")
-    print(f"  p文件目录: {config['p_files_directory']}")
+    if path_groups:
+        print(f"  路径组数量: {len(path_groups)}")
+        for i, group in enumerate(path_groups):
+            print(f"  路径组 {i+1}:")
+            print(f"    源目录: {group['source_directory']}")
+            print(f"    o文件目录: {group['o_files_directory']}")
+            print(f"    p文件目录: {group['p_files_directory']}")
+    else:
+        print(f"  源目录: {config['source_directory']}")
+        print(f"  o文件目录: {config['o_files_directory']}")
+        print(f"  p文件目录: {config['p_files_directory']}")
+    
     print(f"  操作模式: {'复制' if config['copy_mode'] else '移动'}")
     print(f"  重复处理: {'跳过' if config['skip_existing'] else '重命名'}")
     print()
@@ -264,7 +359,7 @@ def main():
     # 确认执行
     confirm = input("是否开始处理？(y/n): ").strip().lower()
     if confirm in ['y', 'yes', '是']:
-        organize_files(config)
+        process_path_groups(config)
     else:
         print("操作已取消。")
 
